@@ -15,12 +15,12 @@ networkConcepts = function(datExpr, power=1, trait=NULL, networkType = "unsigned
 
   if(networkTypeC==1)
   {
-        adj <- abs(cor(datExpr,use="p"))^power
+        adj <- abs(WGCNA::cor(datExpr,use="p"))^power
   } else if (networkTypeC==2)
   {
-  	adj <- abs((cor(datExpr,use="p")+1)/2)^power
+  	adj <- abs((WGCNA::cor(datExpr,use="p")+1)/2)^power
   } else {
-        cor = cor(datExpr,use="p");
+        cor = WGCNA::cor(datExpr,use="p");
         cor[cor < 0] = 0;
   	adj <- cor^power
   }
@@ -62,7 +62,7 @@ networkConcepts = function(datExpr, power=1, trait=NULL, networkType = "unsigned
   ### Eigengene-based Network Concepts
   m1=moduleEigengenes(datExpr, colors = rep(1, Size));
   # Weighted Expression Conformity
-  ConformityE=cor(datExpr,m1[[1]][,1],use="pairwise.complete.obs"); ConformityE=abs(ConformityE)^power; 
+  ConformityE=WGCNA::cor(datExpr,m1[[1]][,1],use="pairwise.complete.obs"); ConformityE=abs(ConformityE)^power; 
   ConnectivityE=sum(ConformityE)*ConformityE; #Expression Connectivity
   DensityE=sum(ConnectivityE)/(Size*(Size-1)); #Expression Density
   CentralizationE=Size*(max(ConnectivityE)-mean(ConnectivityE))/((Size-1)*(Size-2)); #Expression Centralization
@@ -72,9 +72,9 @@ networkConcepts = function(datExpr, power=1, trait=NULL, networkType = "unsigned
 
   ### Significance measure only when trait is available.
   if(!is.null(trait)){
-    EigengeneSignificance = abs(cor(trait, m1[[1]], use="pairwise.complete.obs") )^power;
+    EigengeneSignificance = abs(WGCNA::cor(trait, m1[[1]], use="pairwise.complete.obs") )^power;
     EigengeneSignificance = EigengeneSignificance[1,1]
-    GS= abs(cor(datExpr, trait, use="pairwise.complete.obs") )^power; GS=GS[,1]
+    GS= abs(WGCNA::cor(datExpr, trait, use="pairwise.complete.obs") )^power; GS=GS[,1]
     GSE=ConformityE * EigengeneSignificance; GSE=GSE[,1]
     ModuleSignificance=mean(GS)
     ModuleSignificanceE=mean(GSE)

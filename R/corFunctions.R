@@ -50,7 +50,7 @@ bicor = function(x, y = NULL, robustX = TRUE, robustY = TRUE, use = 'all.obs', m
   {
     if (!robustX)
     {
-      res = cor(x, use = use)
+      res = WGCNA::cor(x, use = use)
     } else {
       res = .Call("bicor1_call", x, 
                maxPOutliers, 
@@ -270,13 +270,13 @@ cor = function(x, y = NULL, use = "all.obs", method = c("pearson", "kendall", "s
 
 cor1 = function(x, use = "all.obs", verbose = 0, indent = 0) 
 {
-   cor(x, use = use, verbose = verbose, indent = indent);
+   WGCNA::cor(x, use = use, verbose = verbose, indent = indent);
 }
 
 corFast = function(x, y = NULL, use = "all.obs",
                 quick = 0, nThreads = 0, verbose = 0, indent = 0)
 {
-  cor(x,y, use, method = "pearson", quick, nThreads, verbose, indent)
+  WGCNA::cor(x,y, use, method = "pearson", quick, nThreads, verbose, indent)
 }
 
 

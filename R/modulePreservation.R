@@ -1625,12 +1625,12 @@ modulePreservation = function(
         nModGenes=length(modGenes[[j]]);
         names1=substring(colnames(kME[[1]]),4)
         j1=which(names1==colorLevels[j])
-        #corkME[j]=cor(kME[[1]][loc,j1],kME[[3]][loc,j1], use = "p")
+        #corkME[j]=WGCNA::cor(kME[[1]][loc,j1],kME[[3]][loc,j1], use = "p")
         corExpr = parse(text=paste(opt$corFnc, "(kME[[1]][modGenes[[j]],j1],kME[[3]][modGenes[[j]],j1]", 
                                    prepComma(opt$corOptions), ")"));
         corkME[j] = abs(eval(corExpr));
 
-        #corkMEall[j]=cor(kME[[1]][,j1],kME[[3]][,j1], use = "p")
+        #corkMEall[j]=WGCNA::cor(kME[[1]][,j1],kME[[3]][,j1], use = "p")
         corExpr = parse(text=paste(opt$corFnc, "(kME[[1]][,j1],kME[[3]][,j1] ", prepComma(opt$corOptions), ")"));
         corkMEall[j] = abs(eval(corExpr));
    #     covkME[j]=cov(kME[[1]][loc,j1],kME[[3]][loc,j1], use = "p")
@@ -1674,7 +1674,7 @@ TRUE))
   for(k in 1:2)
   {
      Gold=which(colnames(ME[[k+1]]) %in% c(opt$MEgold, opt$MEgrey))
-     #corME=cor(ME[[k+1]],use="p")
+     #corME=WGCNA::cor(ME[[k+1]],use="p")
      corExpr = parse(text=paste(opt$corFnc, "(ME[[k+1]]", prepComma(opt$corOptions), ")"));
      corME= eval(corExpr);
      if (opt$nType==0) corME = abs(corME);
@@ -1697,21 +1697,21 @@ TRUE))
   {
      if (!opt$densityOnly) 
      {
-        #ModuleCorData1=cor(datRef[,modGenes[[j]]],use="p", quick = as.numeric(opt$quickCor))
+        #ModuleCorData1=WGCNA::cor(datRef[,modGenes[[j]]],use="p", quick = as.numeric(opt$quickCor))
         corExpr = parse(text=paste(opt$corFnc, "(datRef[,modGenes[[j]]]", prepComma(opt$corOptions), 
                                            ", quick = as.numeric(opt$quickCor))"));
         ModuleCorData1=eval(corExpr);
      }
      if (opt$calculatePermutation | opt$densityOnly)
      {
-        #ModuleCorData2=cor(datRefP[,modGenes[[j]]],use="p", quick = as.numeric(opt$quickCor))
+        #ModuleCorData2=WGCNA::cor(datRefP[,modGenes[[j]]],use="p", quick = as.numeric(opt$quickCor))
         corExpr = parse(text=paste(opt$corFnc, "(datRefP[,modGenes[[j]]]", prepComma(opt$corOptions), 
                                            ", quick = as.numeric(opt$quickCor))"));
         ModuleCorData2 = eval(corExpr);
      } else 
         ModuleCorData2 = ModuleCorData1;
 
-     #ModuleCorData3=cor(datTest[,modGenes[[j]]],use="p", quick = as.numeric(opt$quickCor))
+     #ModuleCorData3=WGCNA::cor(datTest[,modGenes[[j]]],use="p", quick = as.numeric(opt$quickCor))
      corExpr = parse(text=paste(opt$corFnc, "(datTest[,modGenes[[j]]]", prepComma(opt$corOptions),
                                            ", quick = as.numeric(opt$quickCor))"));
      #printFlush(j);
@@ -1732,7 +1732,7 @@ TRUE))
      MeanSignAwareCorDat[j,2]=mean(as.dist(SignedModuleCorData3),na.rm = TRUE)
      if (!opt$densityOnly)
      {
-        #ICORdat[j]=cor(c(as.dist(ModuleCorData1)),c(as.dist(ModuleCorData3)),use="p")
+        #ICORdat[j]=WGCNA::cor(c(as.dist(ModuleCorData1)),c(as.dist(ModuleCorData3)),use="p")
         corExpr = parse(text=paste(opt$corFnc,
                                    "(c(as.dist(ModuleCorData1)),c(as.dist(ModuleCorData3))",
                                    prepComma(opt$corOptions), ")"));

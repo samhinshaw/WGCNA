@@ -141,7 +141,7 @@ rgcolors.func<-function(n = 50)
    corr<-x
  
    if(new)
-     corr<-cor(x, use = 'p')
+     corr<-WGCNA::cor(x, use = 'p')
   
    image(1:n,1:n,corr[,n:1],col=rgcolors.func(nrgcols),axes=FALSE, xlab="", ylab="",... ) 
  

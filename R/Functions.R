@@ -133,7 +133,7 @@ moduleEigengenes = function(expr, colors, impute = TRUE, nPC = 1, align = "along
         svd1 = svd(datModule, nu = min(n, p, nPC), nv = min(n, p, nPC));
         # varExpl[,i]= (svd1$d[1:min(n,p,nVarExplained)])^2/sum(svd1$d^2)
         if (verbose > 5) printFlush(paste(spaces, " ...calculating PVE"));
-        veMat = cor(svd1$v[, c(1:min(n,p,nVarExplained))], t(datModule), use = "p") 
+        veMat = WGCNA::cor(svd1$v[, c(1:min(n,p,nVarExplained))], t(datModule), use = "p") 
         varExpl[c(1:min(n,p,nVarExplained)),i]= rowMeans(veMat^2, na.rm = TRUE)
         # this is the first principal component
         svd1$v[,1]
@@ -168,7 +168,7 @@ moduleEigengenes = function(expr, colors, impute = TRUE, nPC = 1, align = "along
                 matrix(kIM * alignSign, nrow = nrow(scaledExpr), ncol = ncol(scaledExpr), byrow = TRUE) /
                 sum(kIM);
           pcx = rowMeans(pcxMat, na.rm = TRUE);
-          varExpl[1, i] = mean(cor(pcx, t(datModule), use = "p")^2, na.rm = TRUE)
+          varExpl[1, i] = mean(WGCNA::cor(pcx, t(datModule), use = "p")^2, na.rm = TRUE)
           pcx
         }, silent = TRUE);
       }
@@ -199,7 +199,7 @@ moduleEigengenes = function(expr, colors, impute = TRUE, nPC = 1, align = "along
         {
           if (verbose>4) printFlush(paste(spaces,
                           " .. aligning module eigengene with average expression."))
-          corAve = cor(averExpr[,i], PrinComps[,i], use = "p");
+          corAve = WGCNA::cor(averExpr[,i], PrinComps[,i], use = "p");
           if (!is.finite(corAve)) corAve = 0;
           if (corAve<0) PrinComps[,i] = -PrinComps[,i]
         }
@@ -316,7 +316,7 @@ orderMEs = function(MEs, greyLast = TRUE,
      {
        if (verbose>0) printFlush(paste(spaces, "orderMEs: order not given, calculating using given set", 
                                           orderBy));
-       corPC = cor(MEs$eigengenes, use="p")
+       corPC = WGCNA::cor(MEs$eigengenes, use="p")
        disPC = 1-corPC;
        order = .clustOrder(disPC, greyLast = greyLast, greyName = greyName);
      } 
@@ -356,7 +356,7 @@ orderMEs = function(MEs, greyLast = TRUE,
      {
        if (verbose>0) printFlush(paste(spaces, "orderMEs: order not given, calculating using given set", 
                                           orderBy));
-       corPC = cor(MEs[[orderBy]]$data, use="p")
+       corPC = WGCNA::cor(MEs[[orderBy]]$data, use="p")
        disPC = 1-corPC;
        order = .clustOrder(disPC, greyLast = greyLast, greyName = greyName);
      } 
@@ -486,10 +486,10 @@ consensusMEDissimilarity = function(MEs, useAbs = FALSE, useSets = NULL, method 
   {
     if (useAbs)
     {
-        diss = 1-abs(cor(MEs[[set]]$data, use="p"));
+        diss = 1-abs(WGCNA::cor(MEs[[set]]$data, use="p"));
     } else
     {
-        diss = 1-cor(MEs[[set]]$data, use="p");
+        diss = 1-WGCNA::cor(MEs[[set]]$data, use="p");
     }
     MEDiss[[set]] = list(Diss = diss);
   }
@@ -2360,7 +2360,7 @@ adjacency = function(datExpr, selectCols=NULL,
          cor_mat = do.call(corFnc.fnc, c(list(x = datExpr), weightOpt, corOptions))
       } else {
          corExpr = parse(text = paste(corFnc, "(datExpr ", prepComma(weightOpt), prepComma(corOptions), ")"));
-         # cor_mat = cor(datExpr, use = "p");
+         # cor_mat = WGCNA::cor(datExpr, use = "p");
          cor_mat = eval(corExpr);
       }
     } else {
@@ -2370,7 +2370,7 @@ adjacency = function(datExpr, selectCols=NULL,
       } else {
         corExpr = parse(text = paste(corFnc, "(datExpr, datExpr[, selectCols] ", prepComma(weightOpt), 
                                      prepComma(corOptions), ")"));
-        #cor_mat = cor(datExpr, datExpr[, selectCols], use="p");
+        #cor_mat = WGCNA::cor(datExpr, datExpr[, selectCols], use="p");
         cor_mat = eval(corExpr);
       }
     }
@@ -2382,7 +2382,7 @@ adjacency = function(datExpr, selectCols=NULL,
       d = do.call(distFnc, c(list(x = t(datExpr)), distOptions));
     } else {
       corExpr = parse(text = paste(distFnc, "(t(datExpr) ", prepComma(distOptions), ")"));
-      # cor_mat = cor(datExpr, use = "p");
+      # cor_mat = WGCNA::cor(datExpr, use = "p");
       d = eval(corExpr);
     }
     if (any(d<0)) 
@@ -2406,7 +2406,7 @@ unsignedAdjacency = function(datExpr, datExpr2 = NULL, power = 6,
                              corFnc = "cor", corOptions = "use = 'p'")
 {
   corExpr = parse(text = paste(corFnc, "(datExpr, datExpr2 ", prepComma(corOptions), ")"));
-  # abs(cor(datExpr, datExpr2, use="p"))^power;
+  # abs(WGCNA::cor(datExpr, datExpr2, use="p"))^power;
   abs(eval(corExpr))^power;
 }
 
@@ -2939,7 +2939,7 @@ signedKME = function(datExpr, datME, outputColumnName="kME",
     warning(paste("Some gene expressions have fewer than 4 observations.\n",
             "    Hint: consider removing genes with too many missing values or collect more arrays."))
 
-  #output=data.frame(cor(datExpr, datME, use="p"))
+  #output=data.frame(WGCNA::cor(datExpr, datME, use="p"))
   corExpr = parse(text = paste("data.frame(", corFnc, "(datExpr, datME ", prepComma(corOptions), "))" ));
   output = eval(corExpr);
 
@@ -3036,7 +3036,7 @@ stdErr <- function(x){ sqrt( var(x,na.rm = TRUE)/sum(!is.na(x))   ) }
 .panel.cor=function(x, y, digits=2, prefix="", cex.cor){
     usr <- par("usr"); on.exit(par(usr))
     par(usr = c(0, 1, 0, 1))
-    r <- abs(cor(x, y))
+    r <- abs(WGCNA::cor(x, y))
     txt <- format(c(r, 0.123456789), digits=digits)[1]
     txt <- paste(prefix, txt, sep="")
     txt1=txt
@@ -3138,7 +3138,7 @@ verboseScatterplot = function(x, y,
   x= as.numeric(as.character(x))
   y= as.numeric(as.character(y))
   corExpr = parse(text = paste(corFnc, "(x, y ", prepComma(corOptions), ")"));
-  #cor=signif(cor(x,y,use="p",method=correlationmethod),2)
+  #cor=signif(WGCNA::cor(x,y,use="p",method=correlationmethod),2)
   cor=signif(eval(corExpr),2)
   if (abs(cor) < displayAsZero) cor = 0;
   corp = signif(corPvalueStudent(cor, sum(is.finite(x) & is.finite(y))), 2);
@@ -3840,7 +3840,7 @@ plotMEpairs=function(datME, y=NULL, main="Relationship between module eigengenes
     datMEordered=datME
     if (clusterMEs & dim(as.matrix(datME))[[1]] >1 ) 
     {
-      dissimME=(1-t(cor(datME, method="p", use="p")))/2
+      dissimME=(1-t(WGCNA::cor(datME, method="p", use="p")))/2
       hclustdatME=fastcluster::hclust(as.dist(dissimME), method="average" )
       datMEordered=datME[,hclustdatME$order]
     } # end of if
@@ -3953,12 +3953,12 @@ relativeCorPredictionSuccess=function(corPredictionNew, corPredictionStandard, c
       signedCorStandard=c(highCorStandard,-lowCorStandard)
       x1=c(signedCorNew,signedCorStandard)
       Grouping=rep(c(2,1), c(length(signedCorNew), length(signedCorStandard)))
-      sign1=sign(cor(Grouping,x1, use="p"))
+      sign1=sign(WGCNA::cor(Grouping,x1, use="p"))
       if (sign1==0) sign1=1
       kruskalp[j,i]=kruskal.test(x=x1, g=Grouping)$p.value*sign1
       #print(names(data.frame(corPredictionNew))[[i]])
       #print(paste("This correlation is positive if the new method is better than the old method" , 
-                   # signif(cor(Grouping,x1, use="p"),3)))
+                   # signif(WGCNA::cor(Grouping,x1, use="p"),3)))
     } # end of j loop
   } # end of i loop
   kruskalp[kruskalp<0]=1
@@ -3982,7 +3982,7 @@ alignExpr=function(datExpr, y = NULL)
   if ( !is.null(y) & dim(as.matrix(datExpr))[[1]] != length(y) ) 
     stop("Incompatible number of samples in 'datExpr' and 'y'.")
   if (is.null(y) ) y=as.numeric(datExpr[,1]) 
-  sign1=sign(as.numeric(cor(y, datExpr, use="p" )))
+  sign1=sign(as.numeric(WGCNA::cor(y, datExpr, use="p" )))
   as.data.frame(scale(t(t(datExpr)*sign1)))
 } # end of function alignExpr
 
@@ -4612,7 +4612,7 @@ automaticNetworkScreening = function(
 
   NS1=networkScreening(y= y,datME=datME, datExpr=datExpr, getQValues = getQValues)
   # here we compute the eigengene significance measures
-  ES=data.frame(cor(y, datME, use="p"))
+  ES=data.frame(WGCNA::cor(y, datME, use="p"))
 
   ESvector = as.vector(as.matrix(ES));
   EScounts = tapply(abs(ESvector),cut(abs(ESvector),seq(from=0,to=1, by=.1)),length )
@@ -4849,7 +4849,7 @@ networkScreening = function(
   if (nGenes>nMEs & addMEy) {   datME=data.frame(y,datME)  }
   nMEs=dim(as.matrix(datME))[[2]]
   RawCor.Weighted=rep(0,nGenes)
-  #Cor.Standard= as.numeric(cor(y,datExpr,use= "p") )
+  #Cor.Standard= as.numeric(WGCNA::cor(y,datExpr,use= "p") )
   corExpr = parse(text = paste("as.numeric( ", corFnc, "(y,datExpr ", prepComma(corOptions), "))")); 
   Cor.Standard= eval(corExpr)
 
@@ -4857,7 +4857,7 @@ networkScreening = function(
   Cor.Standard[NoAvailable< minimumSampleSize]=NA
   if (nGenes==1) 
   {
-    #RawCor.Weighted=as.numeric(cor(y,datExpr,use= "p") )
+    #RawCor.Weighted=as.numeric(WGCNA::cor(y,datExpr,use= "p") )
     corExpr = parse(text = paste("as.numeric(" , corFnc, "(y,datExpr ", prepComma(corOptions), "))"));
     RawCor.Weighted = eval(corExpr);
   }
@@ -4870,7 +4870,7 @@ networkScreening = function(
     datMEBatch= datME[,index1]
     datKMEBatch=as.matrix(signedKME(datExpr,datMEBatch, outputColumnName="MM.", 
                                     corFnc = corFnc, corOptions = corOptions))
-    # ES.CorBatch= as.vector(cor(  as.numeric(as.character(y))  ,datMEBatch, use="p"))
+    # ES.CorBatch= as.vector(WGCNA::cor(  as.numeric(as.character(y))  ,datMEBatch, use="p"))
     corExpr = parse(text = paste("as.vector( ", corFnc, "(  as.numeric(as.character(y))  ,datMEBatch",
                                   prepComma(corOptions), "))" ));
     ES.CorBatch = eval(corExpr);
@@ -5778,8 +5778,8 @@ correlationPreservation = function(multiME, setLabels, excludeGrey = TRUE, greyL
   for (i in 1:(nSets-1))
     for (j in (i+1):nSets)
     {
-      corME1 = cor(multiME[[i]]$data[, Use], use="p");
-      corME2 = cor(multiME[[j]]$data[, Use], use="p");
+      corME1 = WGCNA::cor(multiME[[i]]$data[, Use], use="p");
+      corME2 = WGCNA::cor(multiME[[j]]$data[, Use], use="p");
       d = 1-abs(tanh((corME1 - corME2) / (abs(corME1) + abs(corME2))^2));
       CP[ ,CPInd] = apply(d, 1, sum)-1;
       CPNames = c(CPNames, paste(setLabels[i], "::", setLabels[j], collapse = ""));
@@ -5825,8 +5825,8 @@ setCorrelationPreservation = function(multiME, setLabels, excludeGrey = TRUE, gr
   for (i in 1:(nSets-1))
     for (j in (i+1):nSets)
     {
-      corME1 = cor(multiME[[i]]$data[, Use], use="p");
-      corME2 = cor(multiME[[j]]$data[, Use], use="p");
+      corME1 = WGCNA::cor(multiME[[i]]$data[, Use], use="p");
+      corME2 = WGCNA::cor(multiME[[j]]$data[, Use], use="p");
       if (m==1) {
         d = 1 - abs(corME1 - corME2)/2;
       } else {
@@ -6113,7 +6113,7 @@ plotEigengeneNetworks = function(
     par(mar = marDendro);
     labels = names(multiME[[set]]$data);
     uselabels = labels[substring(labels,3)!=greyLabel];
-    corME = cor(multiME[[set]]$data[substring(labels,3)!=greyLabel,
+    corME = WGCNA::cor(multiME[[set]]$data[substring(labels,3)!=greyLabel,
                                  substring(labels,3)!=greyLabel], use="p");
     disME = as.dist(1-corME);
     clust = fastcluster::hclust(disME, method = "average");
@@ -6157,7 +6157,7 @@ plotEigengeneNetworks = function(
     textMat = NULL;
     if (i.row==i.col)
     {
-      corME = cor(multiME[[i.col]]$data, use="p") 
+      corME = WGCNA::cor(multiME[[i.col]]$data, use="p") 
       pME = corPvalueFisher(corME, nrow(multiME[[i.col]]$data));
       if (printAdjacency)
       {
@@ -6195,8 +6195,8 @@ plotEigengeneNetworks = function(
       }
     } else
     {
-      corME1 = cor(multiME[[i.col]]$data, use="p");
-      corME2 = cor(multiME[[i.row]]$data, use="p");
+      corME1 = WGCNA::cor(multiME[[i.col]]$data, use="p");
+      corME2 = WGCNA::cor(multiME[[i.row]]$data, use="p");
       cor.dif = (corME1 - corME2)/2;
       d = tanh((corME1 - corME2) / (abs(corME1) + abs(corME2))^2);
       # d = abs(corME1 - corME2) / (abs(corME1) + abs(corME2));
@@ -6985,7 +6985,7 @@ datExpr=data.frame(datExpr)
         deviance0 = ifelse(event == 0, 2 * CumHazard, -2 * log(CumHazard) + 
             2 * CumHazard - 2)
         devianceresidual = sign(martingale1) * sqrt(deviance0)
-        corDeviance = as.numeric(cor(devianceresidual, datExpr, 
+        corDeviance = as.numeric(WGCNA::cor(devianceresidual, datExpr, 
             use = "p"))
         no.nonMissing = sum(!is.na(time))
         pvalueDeviance = corPvalueFisher(cor = corDeviance, nSamples = no.nonMissing)
@@ -7013,7 +7013,7 @@ datExpr=data.frame(datExpr)
         deviance0 = ifelse(event == 0, 2 * CumHazard, -2 * log(CumHazard) + 
             2 * CumHazard - 2)
         devianceresidual = sign(martingale1) * sqrt(deviance0)
-        corDeviance = as.numeric(cor(devianceresidual, datExpr, 
+        corDeviance = as.numeric(WGCNA::cor(devianceresidual, datExpr, 
             use = "p"))
         no.nonMissing = sum(!is.na(time))
         pvalueDeviance = corPvalueFisher(cor = corDeviance, nSamples = no.nonMissing)

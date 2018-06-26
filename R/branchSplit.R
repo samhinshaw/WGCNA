@@ -24,10 +24,10 @@
                        spaces, "  ...svd reported:", pc))
     }
     pc = rowMeans(x, na.rm = TRUE);
-    weight = matrix(abs(cor(x, pc, use = 'p'))^power, nrow(x), ncol(x), byrow = TRUE);
+    weight = matrix(abs(WGCNA::cor(x, pc, use = 'p'))^power, nrow(x), ncol(x), byrow = TRUE);
     pc = scale(rowMeans(x * weight, na.rm = TRUE));
   } else {
-    weight = abs(cor(x, pc))^power;
+    weight = abs(WGCNA::cor(x, pc))^power;
     meanX = rowWeightedMeans(x, weight, na.rm = TRUE);
     cov1 = cov(pc, meanX);
     if (!is.finite(cov1)) cov1 = 0;
@@ -208,7 +208,7 @@ branchSplit = function(expr, branch1, branch2, discardProp = 0.05, minCentralPro
   v2 = svd$v * c( rep(sqrt(length(branch1)), length(branch1)), rep(sqrt(length(branch2)), length(branch2)));
 
   #svd = svd(combinedScaled, nu = nConsideredPCs, nv = 0);
-  #v2 = cor(combinedScaled, svd$u);
+  #v2 = WGCNA::cor(combinedScaled, svd$u);
 
   if (!signed) v2 = v2 * sign(v2[, 1]);
 

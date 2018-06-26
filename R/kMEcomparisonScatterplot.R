@@ -32,8 +32,8 @@ fileName = if (plotAll) paste("kME_correlations_between_",nameA,"_and_",nameB,"_
 	if(is.null(MEsB))
 		MEsB = (moduleEigengenes(datB, colors=as.character(colorh), excludeGrey=noGrey))$eigengenes
 	mods  = substring(names(MEsA),3)
-	kMEsA = as.data.frame(cor(datA,MEsA,use="p"))
-	kMEsB = as.data.frame(cor(datB,MEsB,use="p"))
+	kMEsA = as.data.frame(WGCNA::cor(datA,MEsA,use="p"))
+	kMEsB = as.data.frame(WGCNA::cor(datB,MEsB,use="p"))
 	
 # Second, make the plots
 	xlab  = paste("kME values in",nameA)
