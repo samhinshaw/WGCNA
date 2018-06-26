@@ -16,9 +16,9 @@ adjacency.polyReg = function(datExpr, degree=3, symmetrizationMethod = "mean") {
 	}else{
 	  dati = datExpr[!del, i]; datj = datExpr[!del, j];
         lmPij=glm( dati ~ poly( datj, degree))
-        polyRsquare[i, j] = WGCNA::cor( dati, predict(lmPij))^2
+        polyRsquare[i, j] = wgcnaCor( dati, predict(lmPij))^2
         lmPji=glm( datj ~ poly( dati, degree))
-        polyRsquare[j, i] = WGCNA::cor( datj, predict(lmPji))^2
+        polyRsquare[j, i] = wgcnaCor( datj, predict(lmPji))^2
         rm(dati, datj, lmPij, lmPji)
       }
     }

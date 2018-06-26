@@ -2988,9 +2988,9 @@ projectiveKMeans = function (
     {
       if (intNetworkType==1)
       {
-         dst = 1-abs(WGCNA::cor(centers[, changed], datExpr[, blocks[[b]] ]));
+         dst = 1-abs(wgcnaCor(centers[, changed], datExpr[, blocks[[b]] ]));
       } else {
-         dst = 1-WGCNA::cor(centers[, changed], datExpr[, blocks[[b]] ]);
+         dst = 1-wgcnaCor(centers[, changed], datExpr[, blocks[[b]] ]);
       }
       dstAll[changed, blocks[[b]]] = dst;
       if (verbose > 5) pind = updateProgInd(b/nBlocks, pind);
@@ -3203,9 +3203,9 @@ projectiveKMeans = function (
     nSmall = sum(small);
     if (intNetworkType==1)
     {
-       clustDist = 1-abs(WGCNA::cor(centers[, small]));
+       clustDist = 1-abs(wgcnaCor(centers[, small]));
     } else {
-       clustDist = 1-WGCNA::cor(centers[, small]);
+       clustDist = 1-wgcnaCor(centers[, small]);
     }
 
     diag(clustDist) = 10;
@@ -3288,9 +3288,9 @@ consensusProjectiveKMeans = function (
       for (set in 1:nSets)
         if (intNetworkType==1)
         {
-           dstX[set, , ] = 1-abs(WGCNA::cor(centers[[set]]$data[, changed], multiExpr[[set]]$data));
+           dstX[set, , ] = 1-abs(wgcnaCor(centers[[set]]$data[, changed], multiExpr[[set]]$data));
         } else {
-           dstX[set, , ] = 1-WGCNA::cor(centers[[set]]$data[, changed], multiExpr[[set]]$data);
+           dstX[set, , ] = 1-wgcnaCor(centers[[set]]$data[, changed], multiExpr[[set]]$data);
         }
       dst = array(0, c(nChanged, nGenes));
       if (useMean)
@@ -3501,9 +3501,9 @@ consensusProjectiveKMeans = function (
     {
       if (intNetworkType==1)
       {
-         distX[set, , ] = 1-abs(WGCNA::cor(centers[[set]]$data[, select]));
+         distX[set, , ] = 1-abs(wgcnaCor(centers[[set]]$data[, select]));
       } else {
-         distX[set, , ] = 1-WGCNA::cor(centers[[set]]$data[, select]);
+         distX[set, , ] = 1-wgcnaCor(centers[[set]]$data[, select]);
       }
     }
     -minWhichMin(-distX, byRow = FALSE, dims = 1)$min;

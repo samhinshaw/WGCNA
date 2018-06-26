@@ -20,7 +20,7 @@
 	
 	testTwoAndCombine <- function (datIn, datTmp, thresh){
 	# Internal function for removing one of two genes if they have high enough correlation
-		if (WGCNA::cor(as.numeric(datTmp[1,]),as.numeric(datTmp[2,]))>thresh){
+		if (wgcnaCor(as.numeric(datTmp[1,]),as.numeric(datTmp[2,]))>thresh){
 			rMean = rowMeans(datTmp)
 			omit  = as.numeric(which(rMean==min(rMean)))
 			datIn = datIn[rownames(datIn)!=rownames(datTmp)[omit],]
@@ -38,7 +38,7 @@
 			ids = rownames(datOut)
 			group  = rowGroup[ids]
 			datTmp = datOut[ids[group==g],]
-			corDat = WGCNA::cor(t(datTmp)); 
+			corDat = wgcnaCor(t(datTmp)); 
 			if(length(datTmp)==len) { go=FALSE
 			} else {
 				diag(corDat)=-2
@@ -342,7 +342,7 @@ collapseRows <- function(datET, rowGroup, rowID, method="MaxMean", connectivityB
 	}
 	for (g in more){
 		datETTmp = datET[probes[genes==g],]
-		adj = (0.5+0.5*WGCNA::cor(t(datETTmp),use="p"))^connectivityPower
+		adj = (0.5+0.5*wgcnaCor(t(datETTmp),use="p"))^connectivityPower
 		datETOut[g,] = as.numeric(datETTmp[which.max(rowSums(adj,na.rm=TRUE)),])
 		whichTest    = apply(datETTmp,1,whichTestFn)
                 rowsOut[g] = (names(whichTest)[whichTest==max(whichTest)])[1]

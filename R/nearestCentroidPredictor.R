@@ -395,7 +395,7 @@ nearestCentroidPredictor = function(
         } else if (centroidMethod=="eigensample")
         {
           cp = svd(xSel[clusterSamples,], nu = 0, nv = 1)$v[, 1];
-          cor = WGCNA::cor(t(xSel[clusterSamples,]), cp);
+          cor = wgcnaCor(t(xSel[clusterSamples,]), cp);
           if (sum(cor, na.rm = TRUE) < 0) cp = -cp;
           centroidProfiles[, cl] = cp;
         }

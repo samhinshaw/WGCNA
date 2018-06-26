@@ -137,7 +137,7 @@ accuracyMeasures = function(predicted, observed = NULL,
      if (length(predicted)!=length(observed))
        stop("'predicted' and 'observed' must be vectors of the same length.");
 
-     cr = WGCNA::cor(predicted, observed, use = 'p');
+     cr = wgcnaCor(predicted, observed, use = 'p');
      out = data.frame(
           Measure = c("Cor", "R.squared", "MeanSquareError", "MedianAbsoluteError", "Cindex"),
           Value = c(cr, 

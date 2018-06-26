@@ -7,7 +7,7 @@ corAndPvalue = function(x, y = NULL,
                         ...)
 { 
   ia = match.arg(alternative);
-  cor = WGCNA::cor(x, y, use = use, ...);
+  cor = wgcnaCor(x, y, use = use, ...);
   x = as.matrix(x);
   finMat = !is.na(x)
   if (is.null(y))

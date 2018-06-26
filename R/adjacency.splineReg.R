@@ -16,9 +16,9 @@ adjacency.splineReg = function(datExpr, df = 6-(nrow(datExpr)<100)-(nrow(datExpr
 	}else{
 	  dati = datExpr[!del, i]; datj = datExpr[!del, j];
         lmSij=glm( dati ~ ns( datj, df = df, ...))
-        splineRsquare[i, j] = WGCNA::cor( dati, predict(lmSij))^2
+        splineRsquare[i, j] = wgcnaCor( dati, predict(lmSij))^2
         lmSji=glm( datj ~ ns( dati, df = df, ...))
-        splineRsquare[j, i] = WGCNA::cor( datj, predict(lmSji))^2
+        splineRsquare[j, i] = wgcnaCor( datj, predict(lmSji))^2
         rm(dati, datj, lmSij, lmSji)
       }
     }

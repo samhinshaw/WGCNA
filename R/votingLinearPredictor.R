@@ -508,12 +508,12 @@ removePrincipalComponents = function(x, n)
   MEs = modules$MEs
   MEs = MEs[, colnames(MEs)!="MEgrey"]
   scaledMEs = scale(MEs)
-  ES = t(as.matrix(WGCNA::cor( y, MEs, use="p")))
+  ES = t(as.matrix(wgcnaCor( y, MEs, use="p")))
   weightedAverageME = as.numeric(as.matrix(scaledMEs)%*%ES)/ncol(MEs)
 
   w=0.25
   y.new = w*scale(y) + (1-w)*weightedAverageME
-  GS.new = as.numeric(WGCNA::cor(y.new, expr, use="p"))
+  GS.new = as.numeric(wgcnaCor(y.new, expr, use="p"))
   GS.new
 }
 
